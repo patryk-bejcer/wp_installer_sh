@@ -59,15 +59,41 @@ function downloadCMS {
 }
 
 function unpackCMS {
+
     echo "Sciezka: $installPath"
     # Extract the installation archive
     tar -C $installPath -zxf /tmp/latest.tar.gz --strip-components=1
+
 }
+
+function configCMS {
+
+    echo -n "Tworzenie pliku wp-config.php'"
+    echo ""
+    cd $installPath
+    cp wp-config-sample.php wp-config.php
+    echo -n "Plik 'wp-config.php' utworzony"
+    echo -n "Konfiguracja pliku 'wp-config.php'"
+    echo ""
+
+    #Set DB parameters in config file
+    sed -i "s/database_name_here/$nameDB/g" wp-config.php
+    sed -i "s/username_here/$rootLogin/g" wp-config.php
+    sed -i "s/password_here/$rootPassword/g" wp-config.php
+
+    echo -n "Konfiguracja pliku 'wp-config.php' zakończona pomyślnie"
+    echo ""
+
+    google-chrome http://localhost/blankwp
+    
+}
+
 
 # Main 
 createNewDatabase
 downloadCMS
 unpackCMS
+configCMS
 
 echo -n "Koniec programu!"
 echo ""
